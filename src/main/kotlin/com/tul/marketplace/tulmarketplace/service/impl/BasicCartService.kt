@@ -25,7 +25,7 @@ class BasicCartService : CartService {
 
     override fun createCart(): Cart {
         val cartToCreate = Cart()
-        return cartRepository!!.save(cartToCreate)
+        return cartRepository!!.save<Cart>(cartToCreate)
     }
 
     override fun getCart(cartId: UUID): Optional<Cart> {

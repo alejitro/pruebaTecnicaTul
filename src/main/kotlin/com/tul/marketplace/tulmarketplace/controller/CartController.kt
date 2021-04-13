@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.DeleteMapping
 import java.lang.Exception
+import java.sql.DriverManager.println
 import java.util.*
 
 @RequiredArgsConstructor
@@ -24,11 +25,15 @@ import java.util.*
 @RequestMapping("/api/v1/cart")
 class CartController {
 
+    @Autowired
     private val cartFacade: CartFacade? = null
 
     @PostMapping(path = ["/"])
     fun createCart(@RequestBody productToCartDTO: ProductToCartDTO): CartDTO? {
-        return cartFacade?.createCart(productToCartDTO);
+        println(productToCartDTO.toString())
+        val createdCart = cartFacade?.createCart(productToCartDTO)
+        println("CreatedCart: " + createdCart.toString())
+        return createdCart
     }
 
     @PostMapping(path = ["{cartId}/add-product/"])
