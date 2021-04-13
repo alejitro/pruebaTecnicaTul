@@ -61,11 +61,15 @@ class BasicCartService : CartService {
         val products = productsOnCartRepository!!.findAll().stream().filter { cart -> cart?.cartId == cartId }
         products.forEach { item: ProductsOnCart? ->
             if(item != null){
-                if (item.productId != productId) {
+                if (item.productId == productId) {
                     productsOnCartRepository.delete(item)
                 }
             }
         }
+    }
+
+    override fun checkoutCart(cart: Cart): Cart {
+        return cartRepository!!.save<Cart>(cart);
     }
 
     override fun listProductsOnCart(cartId: UUID): List<ProductsOnCart> {

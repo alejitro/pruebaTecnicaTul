@@ -1,12 +1,13 @@
 package com.tul.marketplace.tulmarketplace.facade.impl
 
 import com.tul.marketplace.tulmarketplace.converter.CartConverter.toCartDTO
-import com.tul.marketplace.tulmarketplace.dto.car.CartProductDTO
 import com.tul.marketplace.tulmarketplace.dto.cart.CartDTO
 import com.tul.marketplace.tulmarketplace.dto.cart.CartProductsDTO
 import com.tul.marketplace.tulmarketplace.dto.cart.ProductToCartDTO
+import com.tul.marketplace.tulmarketplace.enums.CartStatus
 import com.tul.marketplace.tulmarketplace.facade.CartFacade
 import com.tul.marketplace.tulmarketplace.facade.ProductFacade
+import com.tul.marketplace.tulmarketplace.model.Cart
 import com.tul.marketplace.tulmarketplace.model.ProductsOnCart
 import com.tul.marketplace.tulmarketplace.service.CartService
 import lombok.RequiredArgsConstructor
@@ -34,13 +35,13 @@ class BasicCartFacade : CartFacade {
         val productToAdd = productFacade!!.getProductById(productToCartDTO.productId)
         val product = ProductsOnCart(
             UUID.randomUUID(),
-            carCreated.carId,
+            carCreated.cartId,
             productToCartDTO.productId,
             productToCartDTO.quantity,
             productToAdd!!.price!!
         )
         cartService.addProductToCart(product)
-        val productsInCar = cartService.listProductsOnCart(carCreated.carId)
+        val productsInCar = cartService.listProductsOnCart(carCreated.cartId)
         return toCartDTO(carCreated, CartProductsDTO(productsInCar))
     }
 
@@ -61,7 +62,7 @@ class BasicCartFacade : CartFacade {
             if (item.productId != productToCartDTO.productId) {
                 val product = ProductsOnCart(
                     UUID.randomUUID(),
-                    existingCart.carId,
+                    existingCart.cartId,
                     productToCartDTO.productId,
                     productToCartDTO.quantity,
                     productToAdd!!.price!!
@@ -74,21 +75,62 @@ class BasicCartFacade : CartFacade {
 
     @Throws(Exception::class)
     override fun editProductInCart(cartId: UUID, productId: UUID, quantity: Double): CartDTO? {
-        return null
+        val existingCart = cartService!!.getCart(cartId).orElseThrow { Exception("Car does not exist") }
+        val existingProductsInCar = cartService.listProductsOnCart(cartId)
+        existingProductsInCar.forEach { item: ProductsOnCart ->
+            if (item.productId == productId) {
+                cartService.updateCartProduct(cartId,item.productId,quantity)
+            }
+        }
+        val productsUpdated = cartService.listProductsOnCart(cartId);
+        return toCartDTO(existingCart, CartProductsDTO(productsUpdated))
     }
 
     @Throws(Exception::class)
     override fun removeProductsFromCart(cartId: UUID, productId: UUID): CartDTO? {
-        return null
+        val existingCart = cartService!!.getCart(cartId).orElseThrow { Exception("Car does not exist") }
+        val existingProductsInCar = cartService.listProductsOnCart(cartId)
+        existingProductsInCar.forEach { item: ProductsOnCart ->
+            if (item.productId == productId) {
+                cartService.removeProductFromCart(cartId, item.productId)
+            }
+        }
+        val productsUpdated = cartService.listProductsOnCart(cartId);
+        return toCartDTO(existingCart, CartProductsDTO(productsUpdated))
     }
 
     @Throws(Exception::class)
     override fun deleteCart(cartId: UUID): ResponseEntity<String> {
-        return ResponseEntity("void",HttpStatus.OK);
+        cartService?.deleteCart(cartId)
+        var doesCartExist = cartService?.getCart(cartId);
+        if(doesCartExist!=null){
+            return ResponseEntity("Failed to delete the cart $cartId",HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity("Cart $cartId deleted",HttpStatus.OK);
     }
 
     @Throws(Exception::class)
     override fun checkoutCart(cartId: UUID): CartDTO? {
-        return null
+        var totalPrice =0.0
+        var discount = 0.0
+        val existingCart = cartService!!.getCart(cartId).orElseThrow { Exception("Car does not exist") }
+        val existingProductsInCar = cartService.listProductsOnCart(cartId)
+        existingProductsInCar.forEach { item: ProductsOnCart ->
+            var product =productFacade?.getProductById(item.productId)
+            if(product?.hasDiscount == true){
+                totalPrice += (product.price?.div(2)!!)*item.quantity
+                discount += (product.price?.div(2)!!)*item.quantity
+            }else{
+                totalPrice += product?.price!!*item.quantity
+            }
+        }
+        var cartToCheckout = Cart(
+            existingCart.cartId,
+            totalPrice,
+            discount,
+            CartStatus.COMPLETED
+        )
+        val cartClosed = cartService.checkoutCart(cartToCheckout)
+        return toCartDTO(cartClosed, CartProductsDTO(existingProductsInCar))
     }
 }

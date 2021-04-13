@@ -12,5 +12,6 @@ interface CartService {
     fun addProductToCart(productsOnCart: ProductsOnCart)
     fun updateCartProduct(cartId: UUID, productId: UUID, quantity: Double) : List<ProductsOnCart>
     fun removeProductFromCart(cartId: UUID, productId: UUID)
+    fun checkoutCart(cart : Cart) :Cart
 
 }

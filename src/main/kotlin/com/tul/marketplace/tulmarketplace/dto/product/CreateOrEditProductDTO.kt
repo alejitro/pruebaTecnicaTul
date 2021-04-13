@@ -5,5 +5,5 @@ data class CreateOrEditProductDTO (
     val sku: String? = null,
     val description: String? = null,
     val price: Double? = null,
-    val hasDiscount: Boolean = false
+    val hasDiscount: Boolean = true
 )

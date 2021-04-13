@@ -5,17 +5,10 @@ import com.tul.marketplace.tulmarketplace.dto.cart.CartDTO
 import com.tul.marketplace.tulmarketplace.dto.cart.CartProductsDTO
 import com.tul.marketplace.tulmarketplace.dto.cart.ProductToCartDTO
 import lombok.RequiredArgsConstructor
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import com.tul.marketplace.tulmarketplace.facade.CartFacade
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.*
 import java.lang.Exception
 import java.sql.DriverManager.println
 import java.util.*
@@ -45,27 +38,40 @@ class CartController {
         return cartFacade?.addProductToCart(cartId,productToCartDTO);
     }
 
+    @PostMapping(path = ["{cartId}/remove-product/{productId}"])
+    @Throws(Exception::class)
+    fun removeProductFromCart(
+        @PathVariable cartId: UUID,
+        @PathVariable productId: UUID
+    ): CartDTO? {
+        return cartFacade?.removeProductsFromCart(cartId, productId)
+    }
+
     @GetMapping(path = ["/{cartId}/"])
     fun listCartProducts(
         @PathVariable cartId: UUID
     ): CartProductsDTO? {
         return cartFacade?.listCartProducts(cartId);
     }
-    /*
-    @DeleteMapping(path = ["/{productId}/"])
+
+    @DeleteMapping(path = ["/{cartId}/"])
     @Throws(Exception::class)
-    fun deleteProduct(@PathVariable productId: UUID) :ResponseEntity<String> {
-        return cartFacade!!.deleteProduct(productId)
+    fun deleteCart(@PathVariable cartId: UUID) :ResponseEntity<String> {
+        return cartFacade!!.deleteCart(cartId)
 
     }
 
-    @PostMapping(path = ["/enable-discount/{productId}/"])
-    fun enableDiscount(@PathVariable productId: UUID): ProductDTO? {
-        return cartFacade!!.enableDiscount(productId);
+    @PostMapping(path = ["{cartId}/checkout/"])
+    fun checkoutCart(@PathVariable cartId:UUID): CartDTO?{
+        return cartFacade!!.checkoutCart(cartId);
     }
 
-    @PostMapping(path = ["/disable-discount/{productId}/"])
-    fun disableDiscount(@PathVariable productId: UUID): ProductDTO?{
-        return cartFacade!!.disableDiscount(productId);
-    }*/
+    @PutMapping(path = ["{cartId}/update-product/{productId}"])
+    fun updateProductOnCart(
+        @PathVariable cartId:UUID,
+        @PathVariable productId: UUID,
+        @RequestParam quantity: Double
+    ): CartDTO?{
+        return cartFacade!!.editProductInCart(cartId, productId, quantity)
+    }
 }

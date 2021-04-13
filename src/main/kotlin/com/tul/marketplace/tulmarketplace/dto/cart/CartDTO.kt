@@ -6,5 +6,6 @@ data class CartDTO(
     val cartID: String? = null,
     val productsDTO: CartProductsDTO,
     val status: CartStatus,
+    val discount: Double? = null,
     val totalPrice: Double? = null
 )

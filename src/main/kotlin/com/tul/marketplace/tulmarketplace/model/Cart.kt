@@ -9,8 +9,9 @@ import javax.persistence.*
 @Table(name = "CAR")
 data class Cart (
     @Id
-    val carId: UUID = UUID.randomUUID(),
+    val cartId: UUID = UUID.randomUUID(),
     //Se usa un doble por simplicidad de desarrollo
     val totalPrice: Double? = 0.0,
+    val discount: Double? = 0.0,
     val status: CartStatus = CartStatus.PENDING
 )
