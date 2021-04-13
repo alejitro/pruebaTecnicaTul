@@ -6,7 +6,7 @@ import java.util.Collections.emptyList
 import javax.persistence.*
 
 @Entity
-@Table(name = "ProductsOnCart")
+@Table(name = "products_on_cart")
 data class ProductsOnCart (
     @Id
     val id : UUID,

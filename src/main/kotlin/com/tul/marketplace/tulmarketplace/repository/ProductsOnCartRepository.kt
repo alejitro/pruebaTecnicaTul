@@ -7,6 +7,5 @@ import java.util.*
 
 @Repository
 interface ProductsOnCartRepository : JpaRepository<ProductsOnCart?, UUID?> {
-    fun findByCartId(cartId: UUID?): Optional<ProductsOnCart?>?
-    fun findByCartIdAndProductId(cartId: UUID?, productID: UUID?): Optional<ProductsOnCart?>?
+    fun findAllByCartId(cartId: UUID): List<ProductsOnCart>
 }

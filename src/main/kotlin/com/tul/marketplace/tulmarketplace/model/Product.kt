@@ -6,7 +6,7 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "PRODUCT")
+@Table(name = "product")
 data class Product (
     @Id
     val productId: UUID? = null,

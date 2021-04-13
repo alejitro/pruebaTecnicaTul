@@ -6,7 +6,7 @@ import java.util.Collections.emptyList
 import javax.persistence.*
 
 @Entity
-@Table(name = "CAR")
+@Table(name = "cart")
 data class Cart (
     @Id
     val cartId: UUID = UUID.randomUUID(),

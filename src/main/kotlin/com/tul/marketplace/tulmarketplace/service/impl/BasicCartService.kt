@@ -73,14 +73,7 @@ class BasicCartService : CartService {
     }
 
     override fun listProductsOnCart(cartId: UUID): List<ProductsOnCart> {
-        val productsOnCart: MutableList<ProductsOnCart> = ArrayList()
-        val products = productsOnCartRepository!!.findAll().stream().filter { cart -> cart?.cartId == cartId }
-        products.forEach { e: ProductsOnCart? ->
-            if (e != null){
-                productsOnCart.add(e)
-            }
-        }
-        return productsOnCart
+        return productsOnCartRepository!!.findAllByCartId(cartId);
     }
 
     override fun addProductToCart(productsOnCart: ProductsOnCart) {
