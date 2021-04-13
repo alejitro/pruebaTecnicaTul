@@ -6,7 +6,7 @@ import java.util.*
 
 interface CartService {
     fun createCart(): Cart
-
+    fun getCart(cartId: UUID) : Optional<Cart>
     fun listProductsOnCart(cartId: UUID) : List<ProductsOnCart>;
     fun deleteCart(cartId: UUID )
     fun addProductToCart(productsOnCart: ProductsOnCart)

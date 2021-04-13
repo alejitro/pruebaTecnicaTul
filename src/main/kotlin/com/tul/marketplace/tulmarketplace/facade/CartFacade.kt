@@ -12,20 +12,20 @@ interface CartFacade {
     fun createCart(productToCartDTO: ProductToCartDTO): CartDTO
 
     @Throws(Exception::class)
-    fun listCartProducts(carId: UUID) : CartProductsDTO?
+    fun listCartProducts(cartId: UUID) : CartProductsDTO?
 
     @Throws(Exception::class)
-    fun addProductToCart(carId: UUID, productToCartDTO: ProductToCartDTO): CartDTO?
+    fun addProductToCart(cartId: UUID, productToCartDTO: ProductToCartDTO): CartDTO?
 
     @Throws(Exception::class)
-    fun editProductInCart(carId: UUID, productId: UUID, quantity: Double): CartDTO?
+    fun editProductInCart(cartId: UUID, productId: UUID, quantity: Double): CartDTO?
 
     @Throws(Exception::class)
-    fun removeProductsFromCart(carId: UUID, productId: UUID): CartDTO?
+    fun removeProductsFromCart(cartId: UUID, productId: UUID): CartDTO?
 
     @Throws(Exception::class)
     fun deleteCart(cartId: UUID) : ResponseEntity<String>
 
     @Throws(Exception::class)
-    fun checkoutCart(carId: UUID) : CartDTO?
+    fun checkoutCart(cartId: UUID) : CartDTO?
 }

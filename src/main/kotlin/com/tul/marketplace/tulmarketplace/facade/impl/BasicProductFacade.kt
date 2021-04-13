@@ -32,7 +32,6 @@ class BasicProductFacade : ProductFacade {
             createProductDTO.hasDiscount
         )
         val productCreated = productService?.createOrUpdateProduct(productToSave)!!
-        println("productCreated: $productCreated");
         return toProductDTO(productCreated)
     }
 

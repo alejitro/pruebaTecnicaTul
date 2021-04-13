@@ -22,9 +22,14 @@ class BasicCartService : CartService {
 
     @Autowired
     private val productsOnCartRepository: ProductsOnCartRepository? = null
+
     override fun createCart(): Cart {
         val cartToCreate = Cart()
         return cartRepository!!.save(cartToCreate)
+    }
+
+    override fun getCart(cartId: UUID): Optional<Cart> {
+        return cartRepository!!.findById(cartId)
     }
 
     override fun deleteCart(cartId: UUID) {
@@ -39,30 +44,38 @@ class BasicCartService : CartService {
 
     override fun updateCartProduct(cartId: UUID, productId: UUID, quantity: Double): List<ProductsOnCart> {
         val productsOnCart: MutableList<ProductsOnCart> = ArrayList()
-        val products = productsOnCartRepository!!.findAll().stream().filter { (_, cartId1) -> cartId1 == cartId }
-        products.forEach { item: ProductsOnCart ->
-            if (item.productId == productId) {
-                item.quantity = quantity
-                productsOnCartRepository.save(item)
+        val products = productsOnCartRepository!!.findAll().stream().filter { cart -> cart?.cartId == cartId }
+        products.forEach { item: ProductsOnCart? ->
+            if (item != null) {
+                if (item.productId == productId) {
+                    item.quantity = quantity
+                    productsOnCartRepository.save(item)
+                }
+                productsOnCart.add(item)
             }
-            productsOnCart.add(item)
         }
         return productsOnCart
     }
 
     override fun removeProductFromCart(cartId: UUID, productId: UUID) {
-        val products = productsOnCartRepository!!.findAll().stream().filter { (_, cartId1) -> cartId1 == cartId }
-        products.forEach { item: ProductsOnCart ->
-            if (item.productId != productId) {
-                productsOnCartRepository.delete(item)
+        val products = productsOnCartRepository!!.findAll().stream().filter { cart -> cart?.cartId == cartId }
+        products.forEach { item: ProductsOnCart? ->
+            if(item != null){
+                if (item.productId != productId) {
+                    productsOnCartRepository.delete(item)
+                }
             }
         }
     }
 
     override fun listProductsOnCart(cartId: UUID): List<ProductsOnCart> {
         val productsOnCart: MutableList<ProductsOnCart> = ArrayList()
-        val products = productsOnCartRepository!!.findAll().stream().filter { (_, cartId1) -> cartId1 == cartId }
-        products.forEach { e: ProductsOnCart -> productsOnCart.add(e) }
+        val products = productsOnCartRepository!!.findAll().stream().filter { cart -> cart?.cartId == cartId }
+        products.forEach { e: ProductsOnCart? ->
+            if (e != null){
+                productsOnCart.add(e)
+            }
+        }
         return productsOnCart
     }
 
