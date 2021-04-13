@@ -10,7 +10,7 @@ object CartConverter {
     @JvmStatic
     fun toCartDTO(cart: Cart, products: CartProductsDTO?): CartDTO {
         return CartDTO(
-            cart.cartId.toString(),
+            cart.cartId,
             products!!,
             cart.status,
             cart.discount,
