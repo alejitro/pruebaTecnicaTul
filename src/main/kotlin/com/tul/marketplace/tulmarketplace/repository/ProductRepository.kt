@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface ProductRepository : JpaRepository<Product?, String?> {
-    fun findProductByName(name: String?): Optional<Product?>?
-    fun findProductBySku(sku: String?): Optional<Product?>?
+interface ProductRepository : JpaRepository<Product, UUID> {
+    /*fun findProductByName(name: String): Optional<Product?>?
+    fun findProductBySku(sku: String): Optional<Product?>?*/
 }

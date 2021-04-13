@@ -4,8 +4,8 @@ import com.tul.marketplace.tulmarketplace.model.Product
 import java.util.*
 
 interface ProductService {
-    fun createOrUpdateProduct(product: Product): Product?
+    fun createOrUpdateProduct(product: Product): Product
     fun listAllProducts(): List<Product?>?
     fun deleteProduct(product: Product)
-    fun getProductById(productId: String): Optional<Product?>
+    fun getProductById(productId: UUID): Optional<Product?>
 }

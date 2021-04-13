@@ -2,19 +2,26 @@ package com.tul.marketplace.tulmarketplace.facade
 
 import com.tul.marketplace.tulmarketplace.dto.product.CreateOrEditProductDTO
 import com.tul.marketplace.tulmarketplace.dto.product.ProductDTO
+import org.springframework.http.ResponseEntity
 import java.lang.Exception
-import kotlin.Throws
+import java.util.*
 
 interface ProductFacade {
-    fun createProduct(createProductDTO: CreateOrEditProductDTO?): ProductDTO?
+    fun createProduct(createProductDTO: CreateOrEditProductDTO): ProductDTO
     fun listAllProducts(): List<ProductDTO?>?
 
     @Throws(Exception::class)
-    fun updateProduct(productId: String, editProductDTO: CreateOrEditProductDTO?): ProductDTO?
+    fun updateProduct(productId: UUID, editProductDTO: CreateOrEditProductDTO?): ProductDTO?
 
     @Throws(Exception::class)
-    fun enableDiscount(productId: String):ProductDTO?
+    fun enableDiscount(productId: UUID):ProductDTO?
 
     @Throws(Exception::class)
-    fun deleteProduct(productId: String?)
+    fun disableDiscount(productId: UUID):ProductDTO?
+
+    @Throws(Exception::class)
+    fun deleteProduct(productId: UUID) : ResponseEntity<String>
+
+    @Throws(Exception::class)
+    fun getProductById(productId: UUID) :ProductDTO?
 }

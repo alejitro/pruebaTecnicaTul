@@ -12,7 +12,8 @@ object ProductConverter {
             name = product.name,
             sku = product.sku,
             description = product.description,
-            price = product.price
+            price = product.price,
+            hasDiscount = product.hasDiscount
         )
     }
 }
