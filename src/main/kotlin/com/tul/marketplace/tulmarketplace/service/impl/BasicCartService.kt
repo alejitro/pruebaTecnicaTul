@@ -37,6 +37,7 @@ class BasicCartService : CartService {
             val existingCart = cartRepository!!.findById(cartId)
                 .orElseThrow { Exception("Car does not exist") }
             cartRepository.delete(existingCart)
+            productsOnCartRepository?.deleteAllByCartId(cartId)
         } catch (e: Exception) {
             e.printStackTrace()
         }

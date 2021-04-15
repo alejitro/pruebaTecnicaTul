@@ -55,9 +55,9 @@ class BasicProductFacade : ProductFacade {
         val productToUpdate = Product(
             existingProduct.productId,
             editProductDTO!!.name,
-            editProductDTO!!.sku,
-            editProductDTO!!.description,
-            editProductDTO!!.price,
+            editProductDTO.sku,
+            editProductDTO.description,
+            editProductDTO.price,
             editProductDTO.hasDiscount
         )
         val productUpdated = productService.createOrUpdateProduct(productToUpdate)

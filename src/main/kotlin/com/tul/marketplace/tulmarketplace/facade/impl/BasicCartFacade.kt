@@ -17,7 +17,10 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.sql.DriverManager.println
+
+
 import java.util.*
+import java.util.function.Consumer
 
 @RequiredArgsConstructor
 @Slf4j
@@ -31,7 +34,6 @@ class BasicCartFacade : CartFacade {
     @Throws(Exception::class)
     override fun createCart(productToCartDTO: ProductToCartDTO): CartDTO {
         val carCreated = cartService!!.createCart()
-        println("carCreated: $carCreated")
         val productToAdd = productFacade!!.getProductById(productToCartDTO.productId)
         val product = ProductsOnCart(
             UUID.randomUUID(),
@@ -101,12 +103,16 @@ class BasicCartFacade : CartFacade {
 
     @Throws(Exception::class)
     override fun deleteCart(cartId: UUID): ResponseEntity<String> {
-        cartService?.deleteCart(cartId)
-        var doesCartExist = cartService?.getCart(cartId);
+        val doesCartExist = cartService?.getCart(cartId)
+        println(doesCartExist.toString())
         if(doesCartExist!=null){
-            return ResponseEntity("Failed to delete the cart $cartId",HttpStatus.NO_CONTENT);
+            cartService?.deleteCart(cartId)
+            val isCartDeleted= cartService!!.getCart(cartId)
+            if(isCartDeleted.isEmpty){
+                return ResponseEntity("Cart $cartId deleted",HttpStatus.OK);
+            }
         }
-        return ResponseEntity("Cart $cartId deleted",HttpStatus.OK);
+        return ResponseEntity("Failed to delete the cart $cartId",HttpStatus.NO_CONTENT);
     }
 
     @Throws(Exception::class)

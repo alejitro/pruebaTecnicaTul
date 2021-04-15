@@ -8,4 +8,6 @@ import java.util.*
 @Repository
 interface ProductsOnCartRepository : JpaRepository<ProductsOnCart?, UUID?> {
     fun findAllByCartId(cartId: UUID): List<ProductsOnCart>
+
+    fun deleteAllByCartId(cartId: UUID)
 }
